@@ -536,14 +536,18 @@ const defaultAppts=[
   {id:1005,name:'Rithika Nair',phone:'',service:'Scalp Therapy',stylist:'Meera',date:'2026-03-01',time:'12:00 PM',status:'Completed',notes:''}
 ];
 
-const storedSvc=JSON.parse(localStorage.getItem('lum_services')||'null');
-const services=storedSvc?storedSvc.map(s=>{const d=defaultServices.find(x=>x.id===s.id||x.name===s.name);return{...(d||{}),...s};}):defaultServices;
-const schedule=JSON.parse(localStorage.getItem('lum_schedule')||'null')||defaultSchedule;
-const schedWithTe=schedule.map((s,i)=>({...s,day_te:defaultSchedule[i]?.day_te||s.day}));
-const contact=JSON.parse(localStorage.getItem('lum_contact')||'null')||defaultContact;
-const ann=JSON.parse(localStorage.getItem('lum_announcement')||'null')||defaultAnn;
-let appointments=JSON.parse(localStorage.getItem('lum_appts')||'null')||defaultAppts;
+let services,schedule,schedWithTe,contact,ann,appointments;
 let lang=localStorage.getItem('lum_lang')||'en';
+
+function loadData(){
+  const storedSvc=JSON.parse(localStorage.getItem('lum_services')||'null');
+  services=storedSvc?storedSvc.map(s=>{const d=defaultServices.find(x=>x.id===s.id||x.name===s.name);return{...(d||{}),...s};}):defaultServices;
+  schedule=JSON.parse(localStorage.getItem('lum_schedule')||'null')||defaultSchedule;
+  schedWithTe=schedule.map((s,i)=>({...s,day_te:defaultSchedule[i]?.day_te||s.day}));
+  contact=JSON.parse(localStorage.getItem('lum_contact')||'null')||defaultContact;
+  ann=JSON.parse(localStorage.getItem('lum_announcement')||'null')||defaultAnn;
+  appointments=JSON.parse(localStorage.getItem('lum_appts')||'null')||defaultAppts;
+}
 
 function tr(k){return T[lang][k]||T.en[k]||k;}
 
@@ -710,8 +714,41 @@ function nextMonth(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCale
 function fmtDate(d){if(!d)return'';const dt=new Date(d+'T00:00:00');return dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});}
 
 // INIT
-setLang(lang);
-renderContact();
-renderDashboard();
+function fullRender(){
+  renderContact();
+  renderServices();
+  renderScheduleDisplay();
+  renderDashboard();
+  setLang(lang);
+}
+
+loadData();
+fullRender();
 showAnnouncement();
-const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.style.
+
+// ── LIVE SYNC ──
+// Fires when admin.html (same tab or another tab) writes to localStorage
+window.addEventListener('storage', e => {
+  const watched = ['lum_services','lum_schedule','lum_contact','lum_announcement','lum_appts','lum_stylists'];
+  if(watched.includes(e.key)){
+    loadData();
+    fullRender();
+  }
+});
+
+// Also re-sync when user switches back to this tab from admin
+window.addEventListener('focus', () => {
+  loadData();
+  fullRender();
+});
+
+// Fade-in observer
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.style.animation='fadeUp .7s ease forwards';});
+},{threshold:0.1});
+document.querySelectorAll('.service-card,.team-card,.testimonial-card,.stat,.hour-cell').forEach(el=>{
+  el.style.opacity='0';obs.observe(el);
+});
+</script>
+</body>
+</html>
