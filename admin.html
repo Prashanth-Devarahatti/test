@@ -1463,10 +1463,25 @@ function saveAll() {
   localStorage.setItem('lum_announcement', JSON.stringify(announcement));
   localStorage.setItem('lum_appts', JSON.stringify(appointments));
   localStorage.setItem('lum_stylists', JSON.stringify(stylists));
+  // Re-render dashboard stats so counts stay in sync
+  renderDashboard();
   const si = document.getElementById('save-indicator');
   si.classList.add('show');
   setTimeout(() => si.classList.remove('show'), 2500);
 }
+
+// ── LIVE SYNC: if admin is open in two tabs, keep them in sync ──
+window.addEventListener('storage', e => {
+  const watched = ['lum_services','lum_schedule','lum_contact','lum_announcement','lum_appts','lum_stylists'];
+  if (!watched.includes(e.key)) return;
+  services     = JSON.parse(localStorage.getItem('lum_services')     || 'null') || defaultServices;
+  schedule     = JSON.parse(localStorage.getItem('lum_schedule')     || 'null') || defaultSchedule;
+  contact      = JSON.parse(localStorage.getItem('lum_contact')      || 'null') || defaultContact;
+  announcement = JSON.parse(localStorage.getItem('lum_announcement') || 'null') || defaultAnn;
+  appointments = JSON.parse(localStorage.getItem('lum_appts')        || 'null') || defaultAppts;
+  stylists     = JSON.parse(localStorage.getItem('lum_stylists')     || 'null') || defaultStylists;
+  renderDashboard();
+});
 
 // ── TOAST ──
 function showToast(msg) {
