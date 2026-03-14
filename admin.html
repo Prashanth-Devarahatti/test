@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lumière Admin — Control Panel</title>
+<title>Smart Look Gents Parlour — Admin</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -360,8 +360,9 @@ textarea.inp { resize:vertical; }
 <!-- LOGIN -->
 <div id="login-screen">
   <div class="login-box">
-    <div class="login-logo">Lumi<em style="font-style:italic;color:var(--cream)">ère</em></div>
-    <div class="login-sub">Admin Control Panel</div>
+    <div class="login-logo">Smart Look</div>
+    <div style="font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;opacity:.4;margin-bottom:2.5rem;">Gents Parlour · Admin</div>
+    <div class="login-sub" style="display:none">Admin Control Panel</div>
     <label class="login-label">Password</label>
     <input type="password" class="login-input" id="pwd-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Enter Panel</button>
@@ -375,7 +376,7 @@ textarea.inp { resize:vertical; }
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sidebar-logo">Lumi<em style="font-style:italic;color:var(--cream)">ère</em>
+    <div class="sidebar-logo">Smart Look
       <span>Admin Panel</span>
     </div>
     <div class="nav-section">Main</div>
@@ -389,6 +390,9 @@ textarea.inp { resize:vertical; }
     <a class="nav-item" onclick="showPage('stylists',this)">
       <span class="icon">💇</span> Stylists
     </a>
+    <a class="nav-item" onclick="showPage('settings',this)">
+      <span class="icon">⚙️</span> Site Settings
+    </a>
     <a class="nav-item" onclick="showPage('services',this)">
       <span class="icon">✂</span> Services & Prices
     </a>
@@ -400,6 +404,9 @@ textarea.inp { resize:vertical; }
     </a>
     <a class="nav-item" onclick="showPage('announcement',this)">
       <span class="icon">📢</span> Announcement
+    </a>
+    <a class="nav-item" onclick="showPage('testimonials',this)">
+      <span class="icon">⭐</span> Testimonials
     </a>
     <a class="nav-item" onclick="showPage('password',this)">
       <span class="icon">🔐</span> Change Password
@@ -460,6 +467,13 @@ textarea.inp { resize:vertical; }
         </div>
       </div>
 
+      <div style="background:rgba(168,85,85,.08);border:1px solid rgba(168,85,85,.25);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:between;gap:1rem;flex-wrap:wrap;">
+        <div style="flex:1;">
+          <div style="font-size:.65rem;color:var(--rose);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;">⚠ If you see old "Lumière" data anywhere</div>
+          <div style="font-size:.62rem;opacity:.5;">Click Reset to wipe old cached data and reload with correct Smart Look details.</div>
+        </div>
+        <button class="btn btn-danger btn-sm" onclick="resetAllData()" style="flex-shrink:0;">🔄 Reset to Smart Look Data</button>
+      </div>
       <div class="card">
         <div class="card-title">📅 Today's Appointments <span class="badge-count" id="today-count">0</span></div>
         <table class="table" id="today-table">
@@ -490,6 +504,36 @@ textarea.inp { resize:vertical; }
           <thead><tr><th>#</th><th>Client</th><th>Service</th><th>Stylist</th><th>Date</th><th>Time</th><th>Status</th><th>Actions</th></tr></thead>
           <tbody id="appt-tbody"></tbody>
         </table>
+      </div>
+    </div>
+
+    <!-- ── SITE SETTINGS ── -->
+    <div class="page" id="page-settings">
+      <br>
+      <div class="card">
+        <div class="card-title">⚙️ Site Settings — Hero Section</div>
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label class="lbl">Hero Eyebrow Text</label>
+          <input type="text" class="inp" id="set-eyebrow" placeholder="Est. 2026 · Premium Gents Parlour · Kanekal">
+          <span style="font-size:.6rem;opacity:.35;display:block;margin-top:.3rem;">Shown above the main heading. E.g. "Est. 2026 · Premium Gents Parlour · Kanekal"</span>
+        </div>
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label class="lbl">Hero Main Title</label>
+          <input type="text" class="inp" id="set-title" placeholder="Smart Look. Gents Parlour.">
+          <span style="font-size:.6rem;opacity:.35;display:block;margin-top:.3rem;">Main heading on homepage. HTML allowed, e.g. Smart Look.&lt;br&gt;&lt;em&gt;Gents Parlour.&lt;/em&gt;</span>
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label class="lbl">Hero Subtitle</label>
+          <textarea class="inp" id="set-subtitle" rows="2" placeholder="Kanekal's favourite gents salon…"></textarea>
+        </div>
+      </div>
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-title">⚙️ Site Settings — Footer & Branding</div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label class="lbl">Footer Tagline</label>
+          <textarea class="inp" id="set-tagline" rows="2" placeholder="Smart Look Gents Parlour, Kanekal. Expert cuts…"></textarea>
+        </div>
+        <button class="btn btn-gold" onclick="saveSettings()">Save Site Settings</button>
       </div>
     </div>
 
@@ -544,35 +588,35 @@ textarea.inp { resize:vertical; }
         <div class="form-row">
           <div class="form-group">
             <label class="lbl">Salon Name</label>
-            <input type="text" class="inp" id="c-name" placeholder="Lumière Hair Atelier">
+            <input type="text" class="inp" id="c-name" placeholder="Smart Look Gents Parlour">
           </div>
           <div class="form-group">
             <label class="lbl">Phone Number</label>
-            <input type="text" class="inp" id="c-phone" placeholder="+91 89108 12345">
+            <input type="text" class="inp" id="c-phone" placeholder="+91 9652502690">
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="lbl">Email Address</label>
-            <input type="email" class="inp" id="c-email" placeholder="lumiere@atelier.in">
+            <input type="email" class="inp" id="c-email" placeholder="manil48220@gmail.com">
           </div>
           <div class="form-group">
             <label class="lbl">Website</label>
-            <input type="text" class="inp" id="c-website" placeholder="www.lumiere.in">
+            <input type="text" class="inp" id="c-website" placeholder="">
           </div>
         </div>
         <div class="form-group" style="margin-bottom:1rem;">
           <label class="lbl">Street Address</label>
-          <input type="text" class="inp" id="c-address" placeholder="42 Elegance Lane, MVP Colony">
+          <input type="text" class="inp" id="c-address" placeholder="Near Diwaan Pera Dargah">
         </div>
         <div class="form-row">
           <div class="form-group">
             <label class="lbl">City</label>
-            <input type="text" class="inp" id="c-city" placeholder="Visakhapatnam">
+            <input type="text" class="inp" id="c-city" placeholder="Kanekal">
           </div>
           <div class="form-group">
             <label class="lbl">State & PIN</label>
-            <input type="text" class="inp" id="c-state" placeholder="AP 530017">
+            <input type="text" class="inp" id="c-state" placeholder="Kurnool, AP">
           </div>
         </div>
         <div class="form-group" style="margin-bottom:1.2rem;">
@@ -632,7 +676,7 @@ textarea.inp { resize:vertical; }
         </div>
         <div class="form-group" style="margin-bottom:1rem;">
           <label class="lbl">Body Message</label>
-          <textarea class="inp" id="ann-body" rows="3" placeholder="Welcome to Lumière! Book your appointment today and enjoy exclusive opening offers." oninput="updateAnnPreview()"></textarea>
+          <textarea class="inp" id="ann-body" rows="3" placeholder="Welcome to Smart Look! Book your appointment today and enjoy exclusive opening offers." oninput="updateAnnPreview()"></textarea>
         </div>
         <div class="form-row">
           <div class="form-group">
@@ -659,6 +703,59 @@ textarea.inp { resize:vertical; }
 
         <br>
         <button class="btn btn-gold" onclick="saveAnnouncement()">Save Announcement</button>
+      </div>
+    </div>
+
+    <!-- ── TESTIMONIALS ── -->
+    <div class="page" id="page-testimonials">
+      <br>
+      <div class="card">
+        <div class="card-title">⭐ Testimonials
+          <span style="font-size:.6rem;opacity:.4;font-family:'Montserrat',sans-serif;font-weight:300;margin-left:auto;">Max 20 visible. Pending reviews need approval.</span>
+        </div>
+        <div style="display:flex;gap:.8rem;margin-bottom:1.2rem;flex-wrap:wrap;align-items:center;">
+          <select class="inp" id="t-filter" onchange="renderAdminTestimonials()" style="width:160px;">
+            <option value="">All</option>
+            <option value="approved">Approved</option>
+            <option value="pending">Pending Approval</option>
+          </select>
+          <span id="t-count" style="font-size:.65rem;opacity:.4;"></span>
+        </div>
+        <div id="admin-testimonial-list"></div>
+      </div>
+
+      <!-- Add Testimonial (admin) -->
+      <div class="card" style="margin-top:1.5rem;">
+        <div class="card-title">+ Add Testimonial (Admin)</div>
+        <div class="form-group" style="margin-bottom:1rem;">
+          <label class="lbl">Review Text</label>
+          <textarea class="inp" id="at-text" rows="3" maxlength="300" placeholder="Customer review text…"></textarea>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="lbl">Author Name</label>
+            <input type="text" class="inp" id="at-author" placeholder="Rahul K.">
+          </div>
+          <div class="form-group">
+            <label class="lbl">Location (optional)</label>
+            <input type="text" class="inp" id="at-location" placeholder="Kanekal">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="lbl">Rating (stars)</label>
+            <select class="inp" id="at-rating">
+              <option value="5">★★★★★ (5)</option>
+              <option value="4">★★★★ (4)</option>
+              <option value="3">★★★ (3)</option>
+              <option value="2">★★ (2)</option>
+              <option value="1">★ (1)</option>
+            </select>
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;">
+            <button class="btn btn-gold" onclick="addAdminTestimonial()" style="width:100%;">Add & Approve</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -714,10 +811,12 @@ textarea.inp { resize:vertical; }
         <div class="form-group">
           <label class="lbl">Category</label>
           <select class="inp" id="svc-category">
+            <option>Cut & Shave</option>
             <option>Cut & Style</option>
+            <option>Shave</option>
+            <option>Face</option>
             <option>Color</option>
             <option>Treatment</option>
-            <option>Bridal</option>
             <option>Scalp & Spa</option>
             <option>Other</option>
           </select>
@@ -775,7 +874,7 @@ textarea.inp { resize:vertical; }
         </div>
         <div class="form-group">
           <label class="lbl">Email</label>
-          <input type="email" class="inp" id="sm-email" placeholder="stylist@lumiere.in">
+          <input type="email" class="inp" id="sm-email" placeholder="barber@smartlook.in">
         </div>
       </div>
       <div class="form-row">
@@ -803,22 +902,34 @@ textarea.inp { resize:vertical; }
         <textarea class="inp" id="sm-bio" rows="2" placeholder="A short bio about the stylist…"></textarea>
       </div>
       <div class="form-group">
-        <label class="lbl">Avatar Emoji</label>
+        <label class="lbl">Photo Upload (optional)</label>
+        <div style="display:flex;gap:1rem;align-items:flex-start;margin-bottom:.8rem;">
+          <div id="sm-photo-preview" style="width:72px;height:80px;object-fit:cover;border:1px solid var(--border);background:rgba(245,239,230,.04);display:flex;align-items:center;justify-content:center;font-size:2rem;overflow:hidden;flex-shrink:0;">🧔</div>
+          <div style="flex:1;">
+            <input type="file" id="sm-photo-file" accept="image/*" style="display:none;" onchange="previewStylistPhoto(this)">
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('sm-photo-file').click()" style="margin-bottom:.5rem;width:100%;">📷 Upload Photo</button>
+            <button class="btn btn-danger btn-sm" onclick="clearStylistPhoto()" style="width:100%;">✕ Remove Photo</button>
+          </div>
+        </div>
+        <input type="hidden" id="sm-photo-data">
+      </div>
+      <div class="form-group">
+        <label class="lbl">Avatar Emoji (used if no photo uploaded)</label>
         <div style="display:flex;gap:.8rem;align-items:center;margin-bottom:.5rem;">
-          <span id="sm-emoji-preview" style="font-size:2rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:rgba(245,239,230,.04);">👩</span>
-          <input type="text" class="inp" id="sm-emoji" placeholder="👩" maxlength="4" style="width:80px;" oninput="document.getElementById('sm-emoji-preview').textContent=this.value||'👩'">
+          <span id="sm-emoji-preview" style="font-size:2rem;width:48px;height:48px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);background:rgba(245,239,230,.04);">🧔</span>
+          <input type="text" class="inp" id="sm-emoji" placeholder="🧔" maxlength="4" style="width:80px;" oninput="document.getElementById('sm-emoji-preview').textContent=this.value||'🧔'">
         </div>
         <div class="emoji-picker">
-          <div class="emoji-opt" onclick="pickEmoji('👩')">👩</div>
-          <div class="emoji-opt" onclick="pickEmoji('👨')">👨</div>
-          <div class="emoji-opt" onclick="pickEmoji('👩‍🦱')">👩‍🦱</div>
-          <div class="emoji-opt" onclick="pickEmoji('👩‍🦳')">👩‍🦳</div>
-          <div class="emoji-opt" onclick="pickEmoji('👩‍🦰')">👩‍🦰</div>
-          <div class="emoji-opt" onclick="pickEmoji('🧑‍🎨')">🧑‍🎨</div>
-          <div class="emoji-opt" onclick="pickEmoji('👩‍🎨')">👩‍🎨</div>
-          <div class="emoji-opt" onclick="pickEmoji('🧑')">🧑</div>
-          <div class="emoji-opt" onclick="pickEmoji('👱')">👱</div>
-          <div class="emoji-opt" onclick="pickEmoji('👱‍♀️')">👱‍♀️</div>
+          <div class="emoji-opt" onclick="pickEmoji('👩',this)">👩</div>
+          <div class="emoji-opt" onclick="pickEmoji('👨',this)">👨</div>
+          <div class="emoji-opt" onclick="pickEmoji('👩‍🦱',this)">👩‍🦱</div>
+          <div class="emoji-opt" onclick="pickEmoji('👩‍🦳',this)">👩‍🦳</div>
+          <div class="emoji-opt" onclick="pickEmoji('👩‍🦰',this)">👩‍🦰</div>
+          <div class="emoji-opt" onclick="pickEmoji('🧑‍🎨',this)">🧑‍🎨</div>
+          <div class="emoji-opt" onclick="pickEmoji('👩‍🎨',this)">👩‍🎨</div>
+          <div class="emoji-opt" onclick="pickEmoji('🧑',this)">🧑</div>
+          <div class="emoji-opt" onclick="pickEmoji('👱',this)">👱</div>
+          <div class="emoji-opt" onclick="pickEmoji('👱‍♀️',this)">👱‍♀️</div>
         </div>
       </div>
     </div>
@@ -866,11 +977,35 @@ textarea.inp { resize:vertical; }
         <div class="form-group">
           <label class="lbl">Time</label>
           <select class="inp" id="am-time">
-            <option>9:00 AM</option><option>9:30 AM</option><option>10:00 AM</option>
-            <option>10:30 AM</option><option>11:00 AM</option><option>11:30 AM</option>
-            <option>12:00 PM</option><option>2:00 PM</option><option>2:30 PM</option>
-            <option>3:00 PM</option><option>4:00 PM</option><option>4:30 PM</option>
-            <option>5:00 PM</option><option>5:30 PM</option>
+            <option>7:00 AM</option>
+            <option>7:30 AM</option>
+            <option>8:00 AM</option>
+            <option>8:30 AM</option>
+            <option>9:00 AM</option>
+            <option>9:30 AM</option>
+            <option>10:00 AM</option>
+            <option>10:30 AM</option>
+            <option>11:00 AM</option>
+            <option>11:30 AM</option>
+            <option>12:00 PM</option>
+            <option>12:30 PM</option>
+            <option>1:00 PM</option>
+            <option>1:30 PM</option>
+            <option>2:00 PM</option>
+            <option>2:30 PM</option>
+            <option>3:00 PM</option>
+            <option>3:30 PM</option>
+            <option>4:00 PM</option>
+            <option>4:30 PM</option>
+            <option>5:00 PM</option>
+            <option>5:30 PM</option>
+            <option>6:00 PM</option>
+            <option>6:30 PM</option>
+            <option>7:00 PM</option>
+            <option>7:30 PM</option>
+            <option>8:00 PM</option>
+            <option>8:30 PM</option>
+            <option>9:00 PM</option>
           </select>
         </div>
       </div>
@@ -901,38 +1036,68 @@ textarea.inp { resize:vertical; }
 <div class="toast" id="toast"><span class="toast-icon">✓</span> <span id="toast-msg">Saved successfully</span></div>
 
 <script>
+
+// ═══════════════════════════════════════════
+//  SMART LOOK v3 — HARD RESET ON VERSION CHANGE
+// ═══════════════════════════════════════════
+(function(){
+  var V = 'smartlook_v3';
+  if(localStorage.getItem('sl_version') !== V){
+    ['lum_services','lum_schedule','lum_contact','lum_announcement',
+     'lum_appts','lum_stylists','lum_settings','lum_testimonials'].forEach(function(k){
+      localStorage.removeItem(k);
+    });
+    localStorage.setItem('sl_version', V);
+    console.log('Smart Look Admin: Data reset to v3 defaults');
+  }
+})();
+
 // ── DATA DEFAULTS ──
 const defaultServices = [
-  { id:1, name:'Signature Haircut', price:999, duration:60, category:'Cut & Style', desc:'Precision cut tailored to your face shape, lifestyle and hair texture. Includes consultation, wash and blow-dry.', icon:'✂' },
-  { id:2, name:'Color & Highlights', price:2499, duration:120, category:'Color', desc:'Full color, balayage, ombré or highlights using Redken and L\'Oreal Professionnel. Patch test included.', icon:'🎨' },
-  { id:3, name:'Keratin Treatment', price:3999, duration:150, category:'Treatment', desc:'Brazilian blowout for smooth, frizz-free hair lasting up to 3 months. Ideal for all hair types.', icon:'💆' },
-  { id:4, name:'Scalp Therapy', price:1499, duration:60, category:'Scalp & Spa', desc:'Deep scalp cleansing, nourishing oil massage and detox treatment for healthy hair growth.', icon:'🌿' },
-  { id:5, name:'Bridal Package', price:7999, duration:240, category:'Bridal', desc:'Complete bridal hair styling with trial session, updo, accessories setting and touch-up kit.', icon:'👰' },
-  { id:6, name:'Hair Spa & Mask', price:1799, duration:90, category:'Scalp & Spa', desc:'Intensive hydration treatment with steam, protein mask and scalp massage. Restores shine and strength.', icon:'💫' }
+  { id:1,  name:'Haircut + Shaving',      price:150,  duration:30, category:'Cut & Shave',  desc:'Classic haircut paired with a clean shave. Most popular combo.', icon:'✂' },
+  { id:2,  name:'Only Haircut',            price:100,  duration:20, category:'Cut & Style',  desc:'Precision haircut tailored to your face shape and style preference.', icon:'💈' },
+  { id:3,  name:'Only Shaving',            price:70,   duration:15, category:'Shave',        desc:'Clean razor shave with foam and aftershave balm.', icon:'🪒' },
+  { id:4,  name:'Head Massage',            price:70,   duration:20, category:'Scalp & Spa',  desc:'Relaxing head and scalp massage to relieve stress and improve circulation.', icon:'🌿' },
+  { id:5,  name:'Detan Face Wash',         price:250,  duration:30, category:'Face',         desc:'Premium deep cleansing facial treatment using Detan products.', icon:'✨' },
+  { id:6,  name:'Normal Face Wash',        price:150,  duration:20, category:'Face',         desc:'Refreshing face wash and skin clean-up for a fresh look.', icon:'💦' },
+  { id:7,  name:'Dandruff Remover Spa',    price:300,  duration:40, category:'Scalp & Spa',  desc:'Anti-dandruff treatment with medicated spa to cleanse and soothe the scalp.', icon:'🛁' },
+  { id:8,  name:'Hair Colouring',          price:300,  duration:60, category:'Color',        desc:'All hair colours available. Natural look or bold style — your choice.', icon:'🎨' },
+  { id:9,  name:'Hair Straightening',      price:900,  duration:90, category:'Treatment',    desc:'Smooth, straight and manageable hair with a professional straightening treatment.', icon:'💆' },
+  { id:10, name:'Curly Hair Treatment',    price:1500, duration:90, category:'Treatment',    desc:'Permanent curl styling or keratin for naturally curly, bouncy hair.', icon:'🌀' },
+  { id:11, name:'Facial Pack',             price:1500, duration:60, category:'Face',         desc:'Deep cleansing facial pack for glowing, healthy skin.', icon:'🧖' }
 ];
+const defaultTestimonials=[
+  {id:1,text:"Best haircut in Kanekal, hands down. Anil knows exactly what suits your face. Clean cuts every single time.",author:"Rahul K.",location:"Kanekal",rating:5,approved:true},
+  {id:2,text:"Got the skin fade and beard trim together. The finish was perfect. The shop is clean, professional and affordable.",author:"Suresh B.",location:"Kurnool",rating:5,approved:true},
+  {id:3,text:"Hair straightening done for ₹900 — outstanding quality. Very smooth result. The father-son duo really knows their craft.",author:"Kiran T.",location:"Kanekal",rating:5,approved:true}
+];
+const defaultSettings = {
+  hero_eyebrow: "Est. 2026 · Premium Gents Parlour · Kanekal",
+  hero_h1: "Smart Look.<br><em>Gents Parlour.</em>",
+  hero_sub: "Kanekal's favourite gents salon. Expert haircuts, classic shaves, beard styling and modern hair treatments — all under one roof.",
+  footer_tagline: "Smart Look Gents Parlour, Kanekal. Expert cuts, shaves & grooming since 2026. Owner: M. Anil · +91 9652502690"
+};
 const defaultStylists = [
-  { id:1, name:'Aaliya Krishnan', role:'Senior Stylist & Co-founder', specialty:'Balayage, Precision Cuts, Blow-dry', exp:10, phone:'+91 98001 11001', email:'aaliya@lumiere.in', status:'Active', rating:5, emoji:'👩‍🎨', bio:'Aaliya has over 10 years of experience and co-founded Lumière with a vision to redefine luxury hair care.' },
-  { id:2, name:'Rohan Mehta', role:'Color Specialist', specialty:'Balayage, Ombré, Full Color', exp:7, phone:'+91 98001 11002', email:'rohan@lumiere.in', status:'Active', rating:5, emoji:'🧑‍🎨', bio:'Rohan is a certified color technician trained in Paris. His palette instincts are unmatched.' },
-  { id:3, name:'Meera Iyer', role:'Keratin & Texture Expert', specialty:'Keratin, Brazilian Blowout, Perms', exp:5, phone:'+91 98001 11003', email:'meera@lumiere.in', status:'Active', rating:5, emoji:'👩‍🦱', bio:'Meera specializes in transforming frizzy and unruly hair into silky, manageable perfection.' },
-  { id:4, name:'Sanya Doshi', role:'Bridal & Occasion Stylist', specialty:'Bridal Updos, Event Styling, Accessories', exp:6, phone:'+91 98001 11004', email:'sanya@lumiere.in', status:'Active', rating:5, emoji:'👩‍🦳', bio:'Sanya has styled over 200 brides across Andhra Pradesh and Telangana. Every hairdo is her masterpiece.' }
+  { id:1, name:'M. Anil', role:'Owner & Master Barber', specialty:'Haircuts, Skin Fade, Beard Styling, Colouring', exp:5, phone:'+91 9652502690', email:'manil48220@gmail.com', status:'Active', rating:5, emoji:'🧔', photo:'data:image/jpeg;base64,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', bio:'Owner of Smart Look Gents Parlour. Age 21. Passionate about precision cuts and modern styling. Instagram: @smart_look_salon_8' },
+  { id:2, name:'Chinna Hanumanthu', role:'Senior Barber', specialty:'Classic Cuts, Shaving, Head Massage, Facial', exp:25, phone:'+91 9652502690', email:'manil48220@gmail.com', status:'Active', rating:5, emoji:'👨', bio:'Father and senior partner at Smart Look. 25+ years of experience in traditional and modern barbering. Age 45.' }
 ];
 const defaultSchedule = [
-  { day:'Monday', open:true, from:'09:00', to:'20:00' },
-  { day:'Tuesday', open:true, from:'09:00', to:'20:00' },
-  { day:'Wednesday', open:true, from:'09:00', to:'20:00' },
-  { day:'Thursday', open:true, from:'09:00', to:'20:00' },
-  { day:'Friday', open:true, from:'09:00', to:'20:00' },
-  { day:'Saturday', open:true, from:'09:00', to:'20:00' },
-  { day:'Sunday', open:true, from:'10:00', to:'18:00' }
+  { day:'Monday', open:true, from:'07:00', to:'21:00' },
+  { day:'Tuesday', open:true, from:'07:00', to:'21:00' },
+  { day:'Wednesday', open:true, from:'07:00', to:'21:00' },
+  { day:'Thursday', open:true, from:'07:00', to:'21:00' },
+  { day:'Friday', open:true, from:'07:00', to:'21:00' },
+  { day:'Saturday', open:true, from:'07:00', to:'21:00' },
+  { day:'Sunday', open:true, from:'07:00', to:'21:00' }
 ];
-const defaultContact = { name:'Lumière Hair Atelier', phone:'+91 89108 12345', email:'lumiere@atelier.in', website:'www.lumiere.in', address:'42 Elegance Lane, MVP Colony', city:'Visakhapatnam', state:'AP 530017', maps:'' };
-const defaultAnn = { enabled:false, always:false, type:'modal', bg:'#C9A96E', headline:'✨ Special Offer — Book This Week & Get 20% Off!', body:'Welcome to Lumière Hair Atelier. Treat yourself to a luxury hair experience. Limited slots available.', btnText:'Book Now', btnLink:'#book', dismiss:'Continue to site →' };
+const defaultContact = { name:'Smart Look Gents Parlour', phone:'+91 9652502690', email:'manil48220@gmail.com', website:'', address:'Near Diwaan Pera Dargah', city:'Kanekal', state:'Kurnool, AP', maps:'' };
+const defaultAnn = { enabled:false, always:false, type:'modal', bg:'#C9A96E', headline:'✨ Walk In or Book — Smart Look Gents Parlour, Kanekal', body:'Welcome to Smart Look Gents Parlour, Kanekal! Expert haircuts from ₹100. Book your slot today.', btnText:'Book Now', btnLink:'#book', dismiss:'Continue to site →' };
 const defaultAppts = [
-  { id:1001, name:'Divya Reddy', phone:'', service:'Signature Haircut', stylist:'Aaliya', date:'2026-03-14', time:'10:00 AM', status:'Confirmed', notes:'' },
-  { id:1002, name:'Kavya Singh', phone:'', service:'Color & Highlights', stylist:'Rohan', date:'2026-03-15', time:'2:30 PM', status:'Pending', notes:'' },
-  { id:1003, name:'Sneha Patel', phone:'', service:'Keratin Treatment', stylist:'Meera', date:'2026-03-17', time:'11:00 AM', status:'Confirmed', notes:'' },
-  { id:1004, name:'Ananya Kumar', phone:'', service:'Hair Spa & Mask', stylist:'Aaliya', date:'2026-03-05', time:'3:00 PM', status:'Completed', notes:'' },
-  { id:1005, name:'Rithika Nair', phone:'', service:'Scalp Therapy', stylist:'Meera', date:'2026-03-01', time:'12:00 PM', status:'Completed', notes:'' }
+  { id:1001, name:'Rahul Kumar', phone:'', service:'Signature Haircut', stylist:'M. Anil', date:'2026-03-14', time:'10:00 AM', status:'Confirmed', notes:'' },
+  { id:1002, name:'Suresh Nair', phone:'', service:'Hair Colouring', stylist:'Chinna Hanumanthu', date:'2026-03-15', time:'2:30 PM', status:'Pending', notes:'' },
+  { id:1003, name:'Kiran Reddy', phone:'', service:'Hair Straightening', stylist:'M. Anil', date:'2026-03-17', time:'11:00 AM', status:'Confirmed', notes:'' },
+  { id:1004, name:'Arjun Singh', phone:'', service:'Dandruff Remover Spa', stylist:'M. Anil', date:'2026-03-05', time:'3:00 PM', status:'Completed', notes:'' },
+  { id:1005, name:'Venkat Rao', phone:'', service:'Scalp Therapy', stylist:'M. Anil', date:'2026-03-01', time:'12:00 PM', status:'Completed', notes:'' }
 ];
 
 // ── STATE ──
@@ -970,10 +1135,12 @@ function showPage(id, navEl) {
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   if (navEl) navEl.classList.add('active');
-  const titles = { dashboard:'Dashboard', appointments:'Appointments', stylists:'Stylist Roster', services:'Services & Prices', schedule:'Schedule & Hours', contact:'Contact & Address', announcement:'Announcement', password:'Change Password' };
+  const titles = { dashboard:'Dashboard', appointments:'Appointments', settings:'Site Settings', stylists:'Stylist Roster', services:'Services & Prices', schedule:'Schedule & Hours', contact:'Contact & Address', announcement:'Announcement', testimonials:'Testimonials', password:'Change Password' };
   document.getElementById('page-title').textContent = titles[id] || id;
+  if (id === 'settings') loadSettings();
   if (id === 'stylists') renderStylists();
   if (id === 'services') renderServices();
+  if (id === 'testimonials') renderAdminTestimonials();
   if (id === 'appointments') renderAppointments();
   if (id === 'schedule') renderSchedule();
   if (id === 'contact') loadContact();
@@ -981,8 +1148,32 @@ function showPage(id, navEl) {
   if (id === 'dashboard') renderDashboard();
 }
 
+
+// ── RESET ALL DATA TO SMART LOOK DEFAULTS ──
+function resetAllData() {
+  if (!confirm('This will clear ALL saved data and reload with correct Smart Look Gents Parlour details. Continue?')) return;
+  const keys = ['lum_services','lum_schedule','lum_contact','lum_announcement','lum_appts','lum_stylists','lum_testimonials','lum_settings'];
+  keys.forEach(k => localStorage.removeItem(k));
+  // Reload page to apply defaults
+  location.reload();
+}
+
 // ── INIT ──
 function initAll() {
+  // Auto-reset if old Lumière/stale data detected
+  try {
+    const oldSvc = localStorage.getItem('lum_services');
+    const oldContact = localStorage.getItem('lum_contact');
+    const isOld = (oldSvc && (oldSvc.includes('Lumière') || oldSvc.includes('Bridal Package') || oldSvc.includes('Keratin Treatment') || oldSvc.includes('Color & Highlights') || oldSvc.includes('Visakhapatnam'))) ||
+                  (oldContact && (oldContact.includes('Lumière') || oldContact.includes('Elegance Lane') || oldContact.includes('Visakhapatnam')));
+    if (isOld) {
+      ['lum_services','lum_schedule','lum_contact','lum_announcement','lum_appts','lum_stylists','lum_settings','lum_testimonials'].forEach(k=>localStorage.removeItem(k));
+      services = defaultServices; schedule = defaultSchedule; contact = defaultContact;
+      announcement = defaultAnn; appointments = defaultAppts; stylists = defaultStylists;
+      showToast('✓ Old data cleared — Smart Look data loaded');
+    }
+  } catch(e) {}
+
   renderDashboard();
   populateServiceSelect();
   populateStylistSelects();
@@ -1318,6 +1509,102 @@ function changePassword() {
 }
 
 // ── SAVE ALL ──
+
+// ══════════════════════════════════════════
+//  SITE SETTINGS
+// ══════════════════════════════════════════
+function loadSettings() {
+  const s = JSON.parse(localStorage.getItem('lum_settings') || 'null') || defaultSettings;
+  document.getElementById('set-eyebrow').value = s.hero_eyebrow || '';
+  document.getElementById('set-title').value = (s.hero_h1 || '').replace(/<br>/g, '\n').replace(/<[^>]+>/g, '');
+  document.getElementById('set-subtitle').value = s.hero_sub || '';
+  document.getElementById('set-tagline').value = s.footer_tagline || '';
+}
+function saveSettings() {
+  const rawTitle = document.getElementById('set-title').value.trim();
+  const s = {
+    hero_eyebrow: document.getElementById('set-eyebrow').value.trim() || defaultSettings.hero_eyebrow,
+    hero_h1: rawTitle || defaultSettings.hero_h1,
+    hero_sub: document.getElementById('set-subtitle').value.trim() || defaultSettings.hero_sub,
+    footer_tagline: document.getElementById('set-tagline').value.trim() || defaultSettings.footer_tagline
+  };
+  localStorage.setItem('lum_settings', JSON.stringify(s));
+  const si = document.getElementById('save-indicator');
+  si.classList.add('show');
+  setTimeout(() => si.classList.remove('show'), 2500);
+  showToast('Site settings saved — reload the main site to see changes');
+}
+
+// ══════════════════════════════════════════
+//  TESTIMONIALS
+// ══════════════════════════════════════════
+function loadTestimonials(){
+  return JSON.parse(localStorage.getItem('lum_testimonials')||'null') || defaultTestimonials;
+}
+function saveTestimonials(data){
+  localStorage.setItem('lum_testimonials', JSON.stringify(data));
+  const si = document.getElementById('save-indicator');
+  si.classList.add('show'); setTimeout(()=>si.classList.remove('show'), 2500);
+}
+function renderAdminTestimonials(){
+  const tData = loadTestimonials();
+  const filter = document.getElementById('t-filter').value;
+  let list = tData;
+  if(filter==='approved') list = tData.filter(t=>t.approved);
+  if(filter==='pending') list = tData.filter(t=>!t.approved);
+  document.getElementById('t-count').textContent = tData.filter(t=>t.approved).length + ' approved, ' + tData.filter(t=>!t.approved).length + ' pending';
+  const starsStr = r => '★'.repeat(Number(r||5));
+  const container = document.getElementById('admin-testimonial-list');
+  if(!list.length){
+    container.innerHTML = '<div style="text-align:center;opacity:.35;padding:2rem;">No testimonials found</div>';
+    return;
+  }
+  container.innerHTML = list.map(t=>`
+    <div style="border:1px solid var(--border2);padding:1.2rem;margin-bottom:.8rem;background:var(--panel2);position:relative;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.6rem;">
+        <div>
+          <span style="font-size:.7rem;color:var(--gold);">${starsStr(t.rating)}</span>
+          <span style="font-size:.62rem;opacity:.45;margin-left:.5rem;">${t.author}${t.location?' — '+t.location:''}</span>
+          ${t.date?`<span style="font-size:.58rem;opacity:.3;margin-left:.5rem;">${t.date}</span>`:''}
+        </div>
+        <div style="display:flex;gap:.5rem;flex-shrink:0;">
+          ${!t.approved?`<button class="btn btn-success btn-sm" onclick="approveTestimonial(${t.id})">✓ Approve</button>`:'<span style="font-size:.58rem;color:var(--green);opacity:.7;">✓ Approved</span>'}
+          <button class="btn btn-danger btn-sm" onclick="deleteTestimonial(${t.id})">✕</button>
+        </div>
+      </div>
+      <p style="font-size:.72rem;opacity:.65;line-height:1.6;font-style:italic;">"${t.text}"</p>
+    </div>`).join('');
+}
+function approveTestimonial(id){
+  const tData = loadTestimonials();
+  const approved = tData.filter(t=>t.approved).length;
+  if(approved >= 20){ showToast('Maximum 20 approved testimonials allowed'); return; }
+  const t = tData.find(x=>x.id===id);
+  if(t){ t.approved = true; saveTestimonials(tData); renderAdminTestimonials(); showToast('Testimonial approved'); }
+}
+function deleteTestimonial(id){
+  if(!confirm('Delete this testimonial?')) return;
+  const tData = loadTestimonials().filter(t=>t.id!==id);
+  saveTestimonials(tData);
+  renderAdminTestimonials();
+  showToast('Testimonial deleted');
+}
+function addAdminTestimonial(){
+  const text = document.getElementById('at-text').value.trim();
+  const author = document.getElementById('at-author').value.trim();
+  if(!text||!author){ showToast('Text and author required'); return; }
+  const tData = loadTestimonials();
+  const approved = tData.filter(t=>t.approved).length;
+  if(approved >= 20){ showToast('Maximum 20 approved testimonials reached'); return; }
+  tData.push({ id:Date.now(), text, author, location:document.getElementById('at-location').value.trim(), rating:parseInt(document.getElementById('at-rating').value)||5, approved:true, date:new Date().toISOString().split('T')[0] });
+  saveTestimonials(tData);
+  document.getElementById('at-text').value='';
+  document.getElementById('at-author').value='';
+  document.getElementById('at-location').value='';
+  renderAdminTestimonials();
+  showToast('Testimonial added');
+}
+
 // ══════════════════════════════════════════
 //  STYLISTS
 // ══════════════════════════════════════════
@@ -1342,7 +1629,7 @@ function renderStylists() {
   };
   grid.innerHTML = list.map(s => `
     <div class="stylist-card">
-      <div class="stylist-card-avatar">${s.emoji||'👩'}</div>
+      <div class="stylist-card-avatar">${s.photo ? `<img src="${s.photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : (s.emoji||'🧔')}</div>
       <div class="stylist-card-name">${s.name}</div>
       <div class="stylist-card-role">${s.role}</div>
       <div class="stars-display" title="${s.rating} stars">${starsStr(Number(s.rating))}</div>
@@ -1378,8 +1665,12 @@ function openStylistModal(id) {
     document.getElementById('sm-email').value = s.email||'';
     document.getElementById('sm-status').value = s.status||'Active';
     document.getElementById('sm-rating').value = s.rating||5;
-    document.getElementById('sm-emoji').value = s.emoji||'👩';
-    document.getElementById('sm-emoji-preview').textContent = s.emoji||'👩';
+    document.getElementById('sm-emoji').value = s.emoji||'🧔';
+    document.getElementById('sm-emoji-preview').textContent = s.emoji||'🧔';
+    document.getElementById('sm-photo-data').value = s.photo||'';
+    document.getElementById('sm-photo-file').value = '';
+    const prev2 = document.getElementById('sm-photo-preview');
+    if(s.photo){ prev2.innerHTML=''; const im=document.createElement('img'); im.src=s.photo; im.style.cssText='width:100%;height:100%;object-fit:cover;'; prev2.appendChild(im); } else { prev2.innerHTML=s.emoji||'🧔'; prev2.style.fontSize='2rem'; }
     document.getElementById('sm-bio').value = s.bio||'';
     document.querySelectorAll('.emoji-opt').forEach(e => { if(e.textContent===s.emoji) e.classList.add('selected'); });
   } else {
@@ -1392,20 +1683,47 @@ function openStylistModal(id) {
     document.getElementById('sm-email').value = '';
     document.getElementById('sm-status').value = 'Active';
     document.getElementById('sm-rating').value = '5';
-    document.getElementById('sm-emoji').value = '👩';
-    document.getElementById('sm-emoji-preview').textContent = '👩';
+    document.getElementById('sm-emoji').value = '🧔';
+    document.getElementById('sm-emoji-preview').textContent = '🧔';
+    document.getElementById('sm-photo-data').value = '';
+    document.getElementById('sm-photo-file').value = '';
+    const prev3 = document.getElementById('sm-photo-preview');
+    prev3.innerHTML='🧔'; prev3.style.fontSize='2rem';
     document.getElementById('sm-bio').value = '';
   }
-  document.getElementById('stylist-modal').classList.add('show');
+  document.getElementById('stylist-modal').classList.add('open');
 }
 function closeStylistModal() {
-  document.getElementById('stylist-modal').classList.remove('show');
+  document.getElementById('stylist-modal').classList.remove('open');
 }
-function pickEmoji(em) {
+function pickEmoji(em, el) {
   document.getElementById('sm-emoji').value = em;
   document.getElementById('sm-emoji-preview').textContent = em;
   document.querySelectorAll('.emoji-opt').forEach(e => e.classList.remove('selected'));
-  event.target.classList.add('selected');
+  if(el) el.classList.add('selected');
+}
+
+function previewStylistPhoto(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const data = e.target.result;
+    document.getElementById('sm-photo-data').value = data;
+    const prev = document.getElementById('sm-photo-preview');
+    prev.innerHTML = '';
+    const img = document.createElement('img');
+    img.src = data;
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;';
+    prev.appendChild(img);
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+function clearStylistPhoto() {
+  document.getElementById('sm-photo-data').value = '';
+  document.getElementById('sm-photo-file').value = '';
+  const prev = document.getElementById('sm-photo-preview');
+  prev.innerHTML = document.getElementById('sm-emoji').value || '🧔';
+  prev.style.fontSize = '2rem';
 }
 function saveStylist() {
   const name = document.getElementById('sm-name').value.trim();
@@ -1419,7 +1737,8 @@ function saveStylist() {
     email: document.getElementById('sm-email').value.trim(),
     status: document.getElementById('sm-status').value,
     rating: parseFloat(document.getElementById('sm-rating').value) || 5,
-    emoji: document.getElementById('sm-emoji').value || '👩',
+    emoji: document.getElementById('sm-emoji').value || '🧔',
+    photo: document.getElementById('sm-photo-data').value || '',
     bio: document.getElementById('sm-bio').value.trim()
   };
   if (editingStylistId) {
@@ -1463,6 +1782,7 @@ function saveAll() {
   localStorage.setItem('lum_announcement', JSON.stringify(announcement));
   localStorage.setItem('lum_appts', JSON.stringify(appointments));
   localStorage.setItem('lum_stylists', JSON.stringify(stylists));
+  // Note: testimonials + settings saved separately via their own functions
   // Re-render dashboard stats so counts stay in sync
   renderDashboard();
   const si = document.getElementById('save-indicator');
