@@ -367,7 +367,6 @@ textarea.inp { resize:vertical; }
     <input type="password" class="login-input" id="pwd-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Enter Panel</button>
     <div class="login-error" id="login-error">Incorrect password. Try again.</div>
-    <p style="font-size:.6rem;opacity:.3;margin-top:1.2rem;">Default password: <strong>admin123</strong></p>
   </div>
 </div>
 
@@ -467,13 +466,7 @@ textarea.inp { resize:vertical; }
         </div>
       </div>
 
-      <div style="background:rgba(168,85,85,.08);border:1px solid rgba(168,85,85,.25);padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:between;gap:1rem;flex-wrap:wrap;">
-        <div style="flex:1;">
-          <div style="font-size:.65rem;color:var(--rose);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.2rem;">⚠ If you see old "Lumière" data anywhere</div>
-          <div style="font-size:.62rem;opacity:.5;">Click Reset to wipe old cached data and reload with correct Smart Look details.</div>
-        </div>
-        <button class="btn btn-danger btn-sm" onclick="resetAllData()" style="flex-shrink:0;">🔄 Reset to Smart Look Data</button>
-      </div>
+
       <div class="card">
         <div class="card-title">📅 Today's Appointments <span class="badge-count" id="today-count">0</span></div>
         <table class="table" id="today-table">
